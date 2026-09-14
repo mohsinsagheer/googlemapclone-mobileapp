@@ -94,14 +94,15 @@ export default function CategoryChips() {
         styles.container,
         {
           top: insets.top + (Platform.OS === 'ios' ? 58 : 64),
+          pointerEvents: 'box-none',
         },
       ]}
-      pointerEvents="box-none"
     >
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
+        style={{ pointerEvents: 'auto' }}
       >
         {CATEGORIES.map((cat) => {
           const isActive = activeCategory === cat.id;
