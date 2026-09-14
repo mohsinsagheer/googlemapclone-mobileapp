@@ -1,112 +1,88 @@
-# Maps — A Google Maps–style Mobile Web App
+# Maps — React Native Responsive Mobile App
 
-A mobile-first maps app built with Next.js 16, react-leaflet, and free OpenStreetMap data.
-No API keys required — uses Nominatim (geocoding), Overpass (POIs), OSRM (routing),
-and OpenStreetMap / Esri / OpenTopoMap tiles.
+A cross-platform, responsive mobile maps app built with **React Native**, **Expo**, and free OpenStreetMap data. Works natively on **iOS**, **Android**, and **Web**, with responsive layouts for both mobile phones and tablets.
+
+---
 
 ## Features
 
-- Full-screen interactive map with pan / zoom / pinch
-- Search any place worldwide (autocomplete)
-- 12 category chips: Restaurants, Coffee, Gas, Hotels, Groceries, Pharmacy, ATMs, Parks, Shopping, Hospitals, Transit, Gyms
-- Place details bottom sheet: name, address, phone, website, opening hours, Save / Share / Directions
-- Directions mode with Drive / Transit / Walk / Bike tabs, route polyline, ETA, and turn-by-turn steps
-- 3 map layers: Map (streets), Satellite (aerial), Terrain (topographic)
-- Saved places persisted to localStorage
-- My-location button with high-accuracy GPS
-- Mobile-first responsive design (works on phone, tablet, desktop)
+- 🗺️ **Interactive Full-Screen Map**: Smooth pan, pinch-to-zoom, and flyTo camera transitions.
+- 🔍 **Search with Autocomplete**: Search places worldwide using Nominatim geocoding with instant result preview.
+- 🏷️ **12 Category Chips Carousel**: Restaurants, Coffee, Gas, Hotels, Groceries, Pharmacy, ATMs, Parks, Shopping, Hospitals, Transit, and Gyms.
+- 🧭 **Map Controls**:
+  - **Layers Switcher**: Toggle between Map (Streets), Satellite (Esri Imagery), Hybrid (Aerial + street labels), and Terrain (topographic).
+  - **My Location**: High-accuracy native GPS with permission handling via `expo-location`.
+  - **Zoom In / Out**: Responsive touch controls.
+  - **Compass**: Instant north reset.
+- 📍 **Place Details Bottom Sheet**:
+  - Rich details: name, category, distance, address, phone, website, opening hours.
+  - One-tap actions: **Directions**, **Save / Bookmark**, **Native Share**, **Call** (`tel:`), **Open Website**.
+  - Adaptive layout: bottom sheet on phones, floating sidebar card on tablets/landscape.
+- 🚗 **Turn-by-Turn Directions**:
+  - Origin & Destination route calculation via OSRM.
+  - 4 Travel modes: Drive, Transit, Walk, Bike with realistic ETA and distance badges.
+  - Turn-by-turn maneuver steps with direction icons.
+  - Dual-color route polyline (white outline + Google blue route).
+- 💾 **Offline Saved Places**:
+  - Persisted locally with `@react-native-async-storage/async-storage`.
+  - Dedicated Saved Places modal to browse, navigate to, or remove saved bookmarks.
+- 🌐 **Zero API Keys Required**: Uses OpenStreetMap, Esri, OpenTopoMap, Nominatim, Overpass API, and OSRM.
 
-## Local development
+---
 
-```bash
-bun install
-bun run dev   # http://localhost:3000
-```
+## Getting Started
 
-Lint:
-
-```bash
-bun run lint
-```
-
-## Build for production
-
-```bash
-bun run build
-bun run start
-```
-
-The build outputs a standalone Next.js server in `.next/standalone/`.
-
-## Deploy / Publish
-
-This is a standard Next.js 16 app — you can publish it to any Node host:
-
-- **Vercel** — push to GitHub, import the repo at vercel.com
-- **Netlify** — Next.js adapter, build command `next build`
-- **Cloudflare Pages** — `@cloudflare/next-on-pages` adapter
-- **Self-host** — `bun run build` then `bun run start` (or use the standalone output in `.next/standalone/`)
-
-### React Native Responsive Mobile App (iOS / Android / Web)
-
-A complete standalone React Native mobile app powered by **Expo** is located in `mobile/`:
+### 1. Navigate to the mobile project
 
 ```bash
-# From workspace root:
-npm run mobile         # Starts Expo dev server
-npm run mobile:android # Launch on Android
-npm run mobile:ios     # Launch on iOS (macOS)
-npm run mobile:web     # Launch in web browser
-
-# Or navigate directly:
 cd mobile
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
+```
+
+### 3. Run the application
+
+Start the Expo development server:
+
+```bash
 npx expo start
 ```
 
-Scan the QR code with **Expo Go** on your physical phone (iPhone or Android) for instant on-device testing. See [mobile/README.md](file:///home/mohsinsagheer/Map-App/mobile/README.md) for complete details.
+From the terminal menu, you can press:
+- `a` — to open in an **Android Emulator**
+- `i` — to open in an **iOS Simulator** (macOS)
+- `w` — to open in a **Web browser**
+- **Scan QR Code** with the **Expo Go** app on your physical iPhone or Android phone.
 
-## Project structure
+---
+
+## Directory Structure
 
 ```
-src/
-  app/
-    page.tsx                      # Main map page (mobile-first layout)
-    layout.tsx                   # Root layout with viewport meta
-    globals.css                  # Tailwind + custom Leaflet overrides
-    api/
-      search/route.ts            # Nominatim geocoding
-      nearby/route.ts            # Overpass + Nominatim POIs
-      reverse/route.ts           # Reverse geocoding
-      route/route.ts             # OSRM routing
-  components/
-    maps/
-      MapView.tsx                # Leaflet MapContainer + markers + polylines
-    maps-ui/
-      SearchBar.tsx              # Top pill search with autocomplete
-      CategoryChips.tsx          # Horizontal chip row for nearby POIs
-      MapControls.tsx            # Floating right-side controls
-      PlaceDetailsSheet.tsx      # Bottom sheet for selected place
-      DirectionsPanel.tsx        # Full directions UI
-  lib/
-    map-types.ts                 # Shared TypeScript types
-    categories.ts                # Category definitions
-    map-store.ts                 # Zustand store
-    geo-service.ts               # Server-side geocoding / routing helpers
-    marker-icons.ts              # Custom Leaflet divIcons (Google-Maps style)
+mobile/
+├── App.tsx                     # Main mobile app root with SafeAreaProvider
+├── app.json                    # Expo configuration & permissions
+├── package.json                # Dependencies
+├── tsconfig.json               # TypeScript config
+└── src/
+    ├── components/
+    │   ├── CategoryChips.tsx   # 12 horizontal category chips
+    │   ├── DirectionsModal.tsx # Route finder & turn-by-turn navigation
+    │   ├── MapControls.tsx     # GPS locate, layers modal, zoom, compass
+    │   ├── MapEngine.tsx       # Interactive Leaflet map bridge
+    │   ├── PlaceDetailsSheet.tsx # Bottom sheet / tablet card for places
+    │   ├── SavedPlacesModal.tsx# Saved places management modal
+    │   └── SearchBar.tsx       # Floating search pill with autocomplete
+    ├── constants/
+    │   └── categories.ts       # 12 category definitions
+    ├── services/
+    │   └── geoService.ts       # Client-side Nominatim, Overpass, OSRM helpers
+    ├── store/
+    │   └── mapStore.ts         # Zustand store with AsyncStorage persistence
+    └── types/
+        └── map-types.ts        # Shared TypeScript interfaces
 ```
-
-## Data sources (all free, no API key needed)
-
-| Service     | URL                                  | Used for         |
-|-------------|--------------------------------------|------------------|
-| OpenStreetMap tiles | tile.openstreetmap.org        | Default map layer |
-| Esri World Imagery  | server.arcgisonline.com      | Satellite layer   |
-| OpenTopoMap         | tile.opentopomap.org          | Terrain layer     |
-| Nominatim           | nominatim.openstreetmap.org  | Geocoding / search |
-| Overpass API        | overpass-api.de              | Nearby POIs       |
-| OSRM                | router.project-osrm.org      | Routing / directions |
-
-**Rate limits:** All services above are free public endpoints with fair-use policies.
-For production at scale, self-host OSRM / Nominatim / tile server, or switch to
-Google Maps Platform / Mapbox APIs (would require API keys).
